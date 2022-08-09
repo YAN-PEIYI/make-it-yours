@@ -1,0 +1,21 @@
+@charset "utf-8";
+@import url("button li.css");
+#button {
+	font-size: 16px;
+	font-weight: bolder;
+	word-spacing: 10px;
+	text-align: center;
+	letter-spacing: 2px;
+	clear: none;
+	float: none;
+	list-style-type: none;
+	height: 40px;
+	margin-top: 0px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}

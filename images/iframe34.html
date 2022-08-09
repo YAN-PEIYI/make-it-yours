@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<script type="text/javascript" src="show.min.js"></script>
+<style type="text/css">
+body {
+	background-color: #F5F5F5;
+}
+.myMOUSE{ cursor: crosshair; }
+.myMOUSE table tr td #word {
+	padding: 0px;
+	word-spacing: 0em;
+	text-align: left;
+	margin-top: 40px;
+	margin-right: 20px;
+	margin-bottom: 50px;
+	margin-left: 20px;
+	background-image: none;
+	background-repeat: no-repeat;
+}
+.myMOUSE table tr td #link {
+	letter-spacing: 0em;
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	padding-top: 10px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	vertical-align: middle;
+	text-align: left;
+	float: none;
+}
+a img {
+	border: none;
+}
+#abgne_fade_pic {
+	position: relative;
+	width: 600px;
+	height: 326px;
+	border: 0px solid #ccc;
+}
+#abgne_fade_pic a.ad {
+	position: absolute;	/* 讓圖片疊在一起 */
+}
+#abgne_fade_pic .control {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}
+#abgne_fade_pic .control a {
+	display: inline-block;
+	padding: 3px;
+	margin: 0 3px;
+	width: 16px;
+	color: #fff;
+	background: #000;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none;
+}
+#abgne_fade_pic .control a.on {
+	font-weight: bold;
+	color: #DDDDDD;
+}
+
+.col-md-3.article-spot-item-content {
+	padding: 0px;
+	margin: 0px;
+	letter-spacing: 1em;
+	word-spacing: 0em;
+	text-align: center;
+	white-space: normal;
+	display: inline;
+	width: 600px;
+}
+::selection {
+    background: #000;
+    color: #fff;
+}
+::-moz-selection {
+    background: #000;
+    color: #fff;
+}
+
+
+</style>
+<script type="text/javascript">
+$(function(){
+	var $block = $('#abgne_fade_pic'), 
+		$ad = $block.find('.ad'),
+		showIndex = 0,			// 預設要先顯示那一張
+		fadeOutSpeed = 2000,	// 淡出的速度
+		fadeInSpeed = 2000,		// 淡入的速度
+		defaultZ = 10,			// 預設的 z-index
+		isHover = false,
+		timer, speed = 2000;	// 計時器及輪播切換的速度
+ 
+	// 先把其它圖片的變成透明
+	$ad.css({
+		opacity: 0,
+		zIndex: defaultZ - 1
+	}).eq(showIndex).css({
+		opacity: 1,
+		zIndex: defaultZ
+	});
+ 
+	// 組出右下的按鈕
+	var str = '';
+	for(var i=0;i<$ad.length;i++){
+		str += '<a href="#">' + (i + 1) + '</a>';
+	}
+	var $controlA = $('#abgne_fade_pic').append($('<div class="control">' + str + '</div>').css('zIndex', defaultZ + 1)).find('.control a');
+ 
+	// 當按鈕被點選時
+	// 若要變成滑鼠滑入來切換時, 可以把 click 換成 mouseover
+	$controlA.click(function(){
+		// 取得目前點擊的號碼
+		showIndex = $(this).text() * 1 - 1;
+ 
+		// 顯示相對應的區域並把其它區域變成透明
+		$ad.eq(showIndex).stop().fadeTo(fadeInSpeed, 1, function(){
+			if(!isHover){
+				// 啟動計時器
+				timer = setTimeout(autoClick, speed + fadeInSpeed);
+			}
+		}).css('zIndex', defaultZ).siblings('a').stop().fadeTo(fadeOutSpeed, 0).css('zIndex', defaultZ - 1);
+		// 讓 a 加上 .on
+		$(this).addClass('on').siblings().removeClass('on');
+ 
+		return false;
+	}).focus(function(){
+		$(this).blur();
+	}).eq(showIndex).addClass('on');
+ 
+	$ad.hover(function(){
+		isHover = true;
+		// 停止計時器
+		clearTimeout(timer);
+	}, function(){
+		isHover = false;
+		// 啟動計時器
+		timer = setTimeout(autoClick, speed);
+	})
+ 
+	// 自動點擊下一個
+	function autoClick(){
+		if(isHover) return;
+		showIndex = (showIndex + 1) % $controlA.length;
+		$controlA.eq(showIndex).click();
+	}
+ 
+	// 啟動計時器
+	timer = setTimeout(autoClick, speed);
+});
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+</script>
+
+
+</head>
+
+<body onload="MM_preloadImages('link_b1.png','link_b2.png','link_b3.png')" oncontextmenu="window.event.returnValue=false;">
+<div class="myMOUSE"> 
+<table width="600" height="100%" border="0" align="center" cellpadding="0" cellspacing="0" background="#FFF">
+  <tr bgcolor="#FFFFFF" scope="col">
+    <td valign="top" >
+<div class="col-md-3 article-spot-item-content" align="center">
+<h2>歲月，總是不動聲色</h2><h4><font color="#808080">對於過去從不理會</font></h4></div>
+      
+    
+<div id="abgne_fade_pic"> 
+		<a class="ad"><img src="Show34_1.jpg" /></a> 
+		<a class="ad"><img src="Show34_2.jpg" /></a> 
+		<a class="ad"><img src="Show34_3.jpg" /></a> 
+        <a class="ad"><img src="Show34_4.jpg" /></a>
+        <a class="ad"><img src="Show34_5.jpg" /></a>
+        <a class="ad"><img src="Show34_6.jpg" /></a> 
+	</div>     
+    
+    
+	<div id="word">
+      <font size="6" style=""><b>花</b>&nbsp;<b>紋</b>&nbsp;<b>鏤</b>&nbsp;<b>空</b>&nbsp;<b>懷</b>&nbsp;<b>錶</b>&nbsp;</font><br />
+        <font size="2">2.5cm 2.5cm 1cm☓金屬</font><br />
+
+        <font size="4" face="Arial Black, Gadget, sans-serif" color="#666666">$</font>&nbsp;<font size="5" face="Arial Black, Gadget, sans-serif" color="#666666">50</font>
+      
+       <p>誰人的耳際響起<br />
+        青春的跫音</p>
+      <p>我坐在時間裡<br />
+        所有的數字<br />
+        都飛了起來</p>
+      <p>恍惚明白<br />
+        有些一旦錯過<br />
+        便再也追不回了</p>
+      <p>比如這<br />
+      當下</p><br />
+      <font size="2" color="#A9A9A9"><b>備註：</b><br /><br />
+<b>1.電池需更換</b></font><br />
+      
+	</div>
+    <div id="link">
+    <a href="mailto:peiyidesign@gmail.com" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image1','','link_b1.png',1)"><img src="link_1.png" width="25" height="25" id="Image1" title="Mail to me"/></a>&nbsp;&nbsp;
+    <a target="_blank" href="https://www.facebook.com/2014makeityours" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','link_b2.png',1)"><img src="link_2.png" width="25" height="25" id="Image2" title="Facebook粉絲團" /></a>&nbsp;&nbsp;
+    <a href="#"  onclick="alert('LINE ID ► yanpeiyi')" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image3','','link_b3.png',1)"><img src="link_3.png" width="25" height="25" id="Image3"  title="加我好友" /></a>
+    &nbsp;&nbsp;&nbsp;
+    <font size="1" color="#C0C0C0">MAKEItYOURS▫▫▫</font></div></td>
+  </tr>
+</table>
+</div>
+
+</body>
+</html>

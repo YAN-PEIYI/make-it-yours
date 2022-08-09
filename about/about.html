@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link href="../icon.ico" rel="SHORTCUT ICON">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>拾。光</title>
+<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+<style type="text/css">
+@import url("menubutton.css");
+
+body,td,th {
+	color: #444;
+}
+body {
+	background-color: #F5F5F5;
+	background-image: url(../pattern.png);
+	
+}
+a:link {
+	color: #999999;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+	color: #999999;
+}
+a:active {
+	text-decoration: none;
+}
+img {
+  border: 0px
+}
+::selection {
+    background: #000;
+    color: #fff;
+}
+::-moz-selection {
+    background: #000;
+    color: #fff;
+}
+#poptrox #gallery #bg {
+	background-image: url(bg.PNG);
+	background-repeat:no-repeat
+}
+#poptrox #gallery li #abgne_fade_pic {
+	position: relative;
+	width: 1000px;
+	height: 309px;
+	border: 0px solid #ccc;
+}
+#poptrox #gallery li #abgne_fade_pic a.ad {
+	position: absolute;	/* 讓圖片疊在一起 */
+}
+#poptrox #gallery li #abgne_fade_pic .control {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}
+#poptrox #gallery li #abgne_fade_pic .control a {
+	display: inline-block;
+	padding: 3px;
+	margin: 0 3px;
+	width: 16px;
+	color: #fff;
+	background: #000;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none;
+}
+#poptrox #gallery li #abgne_fade_pic .control a.on {
+	font-weight: bold;
+	color: #fff;
+}
+
+#poptrox #gallery #bg #word {
+}
+#poptrox #gallery #bg #word {
+	font-variant: normal;
+	font-weight: normal;
+	font-size: 16px;
+	letter-spacing: normal;
+	line-height: 32px;
+}
+.myMOUSE{ cursor: crosshair; }
+
+
+</style>
+<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="jquery.poptrox-0.1.js"></script>
+<script type="text/javascript" src="jquery-latest.min.js"></script>
+<script type="text/javascript" src="slide.js"></script>
+<script type="text/javascript" src="slide2.js"></script>
+<script type="text/javascript">
+
+
+$(function(){
+		var $block = $('#abgne_fade_pic'), 
+			$ad = $block.find('.ad'),
+			showIndex = 0,			// 預設要先顯示那一張
+			fadeOutSpeed = 2500,	// 淡出的速度
+			fadeInSpeed = 2000,		// 淡入的速度
+			defaultZ = 10,			// 預設的 z-index
+			isHover = false,
+			timer, speed = 3000;	// 計時器及輪播切換的速度
+		
+		// 先把其它圖片的變成透明
+		$ad.css({
+			opacity: 0,
+			zIndex: defaultZ - 1
+		}).eq(showIndex).css({
+			opacity: 1,
+			zIndex: defaultZ
+		});
+		
+		// 組出右下的按鈕
+		var str = '';
+		for(var i=0;i<$ad.length;i++){
+			str += '<a href="#">' + (i + 1) + '</a>';
+		}
+		var $controlA = $('#abgne_fade_pic').append($('<div class="control">' + str + '</div>').css('zIndex', defaultZ + 1)).find('.control a');
+
+		// 當按鈕被點選時
+		// 若要變成滑鼠滑入來切換時, 可以把 click 換成 mouseover
+		$controlA.mouseover(function(){
+			// 取得目前點擊的號碼
+			showIndex = $(this).text() * 1 - 1;
+			
+			// 顯示相對應的區域並把其它區域變成透明
+			$ad.eq(showIndex).stop().fadeTo(fadeInSpeed, 1, function(){
+				if(!isHover){
+					// 啟動計時器
+					timer = setTimeout(autoClick, speed + fadeInSpeed);
+				}
+			}).css('zIndex', defaultZ).siblings('a').stop().fadeTo(fadeOutSpeed, 0).css('zIndex', defaultZ - 1);
+			// 讓 a 加上 .on
+			$(this).addClass('on').siblings().removeClass('on');
+
+			return false;
+		}).focus(function(){
+			$(this).blur();
+		}).eq(showIndex).addClass('on');
+
+		$block.hover(function(){
+			isHover = true;
+			// 停止計時器
+			clearTimeout(timer);
+		}, function(){
+			isHover = false;
+			// 啟動計時器
+			timer = setTimeout(autoClick, speed);
+		})
+		
+		// 自動點擊下一個
+		function autoClick(){
+			if(isHover) return;
+			showIndex = (showIndex + 1) % $controlA.length;
+			$controlA.eq(showIndex).mouseover();
+		}
+		
+		// 啟動計時器
+		timer = setTimeout(autoClick, speed);
+	});
+
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+</script>
+
+</head><body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
+<div class="myMOUSE">
+
+
+<SCRIPT Language="JavaScript">
+var clickmessage="拾。光 MAKEItYOURS"
+function disableclick(e) {if (document.all) {if (event.button==2||event.button==3) {if (event.srcElement.tagName=="IMG"){alert(clickmessage);
+return false;}}}if (document.layers) {if (e.which == 3) {alert(clickmessage);return false;}}}function associateimages(){for(i=0;i<document.images.length;i++)document.images.onmousedown=disableclick;}if (document.all)document.onmousedown=disableclick
+else if (document.layers)associateimages()</SCRIPT>
+
+<table width="1200" height="100%" border="0" align="center">
+  <tr>
+    <th align="left" scope="col"><br /><br /><div><a href="../index.html"><img src="../logo.png" width="223" height="85" /></a><br />
+        <font size="7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAKE<a href="../index.html"><font color="#FF0000">It</font></a></font><font size="7">YOURS</font>      </div>
+      <p>&nbsp; </p>
+      
+     
+          <ul id="button">
+            <li><a href="../contact/contact.html">Contact</a></li>
+            <li><a href="../store.html">Store</a></li>
+            <li id="nav-about"><a href="about.html">About</a></li>
+            <li><a href="../home/home.html">Home</a></li>
+          </ul>
+       
+      
+      
+   </th>
+  </tr>
+  <tr>
+    <td align="left"><div id="poptrox">
+      <!-- start -->
+      <ul id="gallery">
+        <li><div id="abgne_fade_pic"> 
+		<a class="ad"><img src="01.jpg"/></a>
+        <a class="ad"><img src="02.jpg"/></a>
+        <a class="ad"><img src="03.jpg"/></a>
+         <a class="ad"><img src="04.jpg"/></a>
+         <a class="ad"><img src="05.jpg"/></a></div>
+        </li>
+         <li><table width="1200" height="40" border="0" align="center"></table></li>
+        <li><img src="../logo2.png"/></li>
+        
+        <li id="bg"><div id="word"><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那是一個微雨的早晨&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陽光 透著些許的靦腆<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;從指縫間 彷彿看見<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;流洩的回憶 從狂狷到平淡<br /><br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;世界 美麗得如此永恆－－<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;寂寞的淚光、嚮往的眼光<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;還有 老氣味的時光<br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;於是 我拾起所有的光<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在熙攘錯落的歲月裡<br /><br /><br /></div>
+</li>
+       
+      </ul>
+      <br class="clear" />
+      <script type="text/javascript">
+		$('#gallery').poptrox({
+			usePopupCaption: true
+			});
+		
+		</script>
+      <!-- end -->
+    </div></td>
+  </tr>
+  <tr>
+    <td align="center" valign="middle"><footer>
+      <p>&nbsp;</p>
+      <p>Copyright &copy; MAKEITYOURS | design from <a href="mailto:peiyidesign@gmail.com">YAN PEIYI</a>    </p>
+    </footer></td>
+  </tr>
+</table>
+<script type="text/javascript">
+</script></div>
+</body>
+</html>
